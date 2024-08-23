@@ -1,0 +1,17 @@
+/Users/john/Documents/projects/Personal/path-cli/PathCli/bin/Debug/net8.0/PathCli
+/Users/john/Documents/projects/Personal/path-cli/PathCli/bin/Debug/net8.0/PathCli.deps.json
+/Users/john/Documents/projects/Personal/path-cli/PathCli/bin/Debug/net8.0/PathCli.runtimeconfig.json
+/Users/john/Documents/projects/Personal/path-cli/PathCli/bin/Debug/net8.0/PathCli.dll
+/Users/john/Documents/projects/Personal/path-cli/PathCli/bin/Debug/net8.0/PathCli.pdb
+/Users/john/Documents/projects/Personal/path-cli/PathCli/bin/Debug/net8.0/CommandLine.dll
+/Users/john/Documents/projects/Personal/path-cli/PathCli/obj/Debug/net8.0/PathCli.csproj.AssemblyReference.cache
+/Users/john/Documents/projects/Personal/path-cli/PathCli/obj/Debug/net8.0/PathCli.GeneratedMSBuildEditorConfig.editorconfig
+/Users/john/Documents/projects/Personal/path-cli/PathCli/obj/Debug/net8.0/PathCli.AssemblyInfoInputs.cache
+/Users/john/Documents/projects/Personal/path-cli/PathCli/obj/Debug/net8.0/PathCli.AssemblyInfo.cs
+/Users/john/Documents/projects/Personal/path-cli/PathCli/obj/Debug/net8.0/PathCli.csproj.CoreCompileInputs.cache
+/Users/john/Documents/projects/Personal/path-cli/PathCli/obj/Debug/net8.0/PathCli.csproj.Up2Date
+/Users/john/Documents/projects/Personal/path-cli/PathCli/obj/Debug/net8.0/PathCli.dll
+/Users/john/Documents/projects/Personal/path-cli/PathCli/obj/Debug/net8.0/refint/PathCli.dll
+/Users/john/Documents/projects/Personal/path-cli/PathCli/obj/Debug/net8.0/PathCli.pdb
+/Users/john/Documents/projects/Personal/path-cli/PathCli/obj/Debug/net8.0/PathCli.genruntimeconfig.cache
+/Users/john/Documents/projects/Personal/path-cli/PathCli/obj/Debug/net8.0/ref/PathCli.dll
