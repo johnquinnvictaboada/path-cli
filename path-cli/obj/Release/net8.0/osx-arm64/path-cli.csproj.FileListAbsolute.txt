@@ -197,3 +197,4 @@
 /Users/john/Documents/projects/Personal/path-cli/path-cli/obj/Release/net8.0/osx-arm64/path-cli.pdb
 /Users/john/Documents/projects/Personal/path-cli/path-cli/obj/Release/net8.0/osx-arm64/path-cli.genruntimeconfig.cache
 /Users/john/Documents/projects/Personal/path-cli/path-cli/obj/Release/net8.0/osx-arm64/ref/path-cli.dll
+/Users/john/Documents/projects/Personal/path-cli/path-cli/obj/Release/net8.0/osx-arm64/path-cli.sourcelink.json

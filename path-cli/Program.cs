@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace PathCli;
 
@@ -12,6 +11,7 @@ class Program
     {
         if (args.Length == 0)
         {
+            Console.WriteLine("\n");
             Console.WriteLine("  path-cli --help     list of available commands");
             return;
         }
@@ -19,14 +19,13 @@ class Program
         switch (args[0])
         {
             case "add":
-            if (args.Length < 2)
-            {
-                Console.WriteLine("Please provide a path to add.");
-                return;
-            }
-            AddPath(args[1]); // Handle path directly
-            break;
-
+                if (args.Length < 2)
+                {
+                    Console.WriteLine("Please provide a path to add.");
+                    return;
+                }
+                AddPath(args[1]); // Handle path directly
+                break;
 
             case "remove":
                 if (args.Length < 2)
@@ -42,15 +41,15 @@ class Program
                 break;
 
             case "code":
-                OpenZshrcInVSCode();
+                OpenShellConfigInVSCode();
                 break;
 
             case "--help":
-                Console.WriteLine("  path-cli add <path>     Add a new path to the .zshrc file.");
-                Console.WriteLine("  path-cli add current    Add the current directory to the .zshrc file.");
-                Console.WriteLine("  path-cli remove <path>  Remove a path from the .zshrc file.");
-                Console.WriteLine("  path-cli list           List all paths in the .zshrc file.");
-                Console.WriteLine("  path-cli code           Open the .zshrc file with Visual Studio Code.");
+                Console.WriteLine("\n");
+                Console.WriteLine("  path-cli add <path>     Add a new path to the shell config file.");
+                Console.WriteLine("  path-cli remove <path>  Remove a path from the shell config file.");
+                Console.WriteLine("  path-cli list           List all paths in the shell config file.");
+                Console.WriteLine("  path-cli code           Open the shell config file with Visual Studio Code.");
                 break;
 
             default:
@@ -59,23 +58,41 @@ class Program
         }
     }
 
+    static string GetShellConfigFile()
+    {
+        var shell = Environment.GetEnvironmentVariable("SHELL");
+
+        if (shell != null && shell.Contains("bash"))
+        {
+            return ".bashrc";
+        }
+        else if (shell != null && shell.Contains("zsh"))
+        {
+            return ".zshrc";
+        }
+        else
+        {
+            // Default to .zshrc if shell is not recognized
+            return ".zshrc";
+        }
+    }
+
     static void AddPath(string path)
     {
-        var zshrcPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".zshrc");
-        var lines = File.ReadAllLines(zshrcPath).ToList();
+        var shellConfigFile = GetShellConfigFile();
+        var configFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), shellConfigFile);
+        var lines = File.ReadAllLines(configFilePath).ToList();
 
-        // Resolve the path to its absolute form
         var absolutePath = Path.GetFullPath(path);
 
-        // Format the path to match the existing entries
         var formattedPath = $"export PATH=\"$PATH:{absolutePath}\"";
         Console.WriteLine($"Formatted path to add: {formattedPath}");
 
         if (!lines.Any(line => line.Contains(formattedPath)))
         {
             lines.Add(formattedPath);
-            File.WriteAllLines(zshrcPath, lines);
-            Console.WriteLine($"{absolutePath} added to PATH in .zshrc.");
+            File.WriteAllLines(configFilePath, lines);
+            Console.WriteLine($"{absolutePath} added to PATH in {shellConfigFile}.");
         }
         else
         {
@@ -83,48 +100,43 @@ class Program
         }
     }
 
-
     static void RemovePath(string path)
     {
-        var zshrcPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".zshrc");
-        var lines = File.ReadAllLines(zshrcPath).ToList();
+        var shellConfigFile = GetShellConfigFile();
+        var configFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), shellConfigFile);
+        var lines = File.ReadAllLines(configFilePath).ToList();
 
-        // Ensure the path is formatted correctly for comparison
         var formattedPath = $"export PATH=\"$PATH:{path}\"";
         Console.WriteLine($"Formatted path to remove: {formattedPath}");
 
-        // Remove lines containing the exact formatted path
         var updatedLines = lines.Where(line => 
         {
             var trimmedLine = line.Trim();
-            // Match line if it starts with 'export PATH=' and contains the path
             return !(trimmedLine.StartsWith("export PATH=") && trimmedLine.Contains(path));
         }).ToList();
 
         if (updatedLines.Count != lines.Count)
         {
-            File.WriteAllLines(zshrcPath, updatedLines);
-            Console.WriteLine($"{path} removed from PATH in .zshrc.");
+            File.WriteAllLines(configFilePath, updatedLines);
+            Console.WriteLine($"{path} removed from PATH in {shellConfigFile}.");
         }
         else
         {
-            Console.WriteLine($"{path} not found in .zshrc.");
+            Console.WriteLine($"{path} not found in {shellConfigFile}.");
         }
     }
 
-
-
-
     static void ListPaths()
     {
-        var zshrcPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".zshrc");
-        var lines = File.ReadAllLines(zshrcPath)
+        var shellConfigFile = GetShellConfigFile();
+        var configFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), shellConfigFile);
+        var lines = File.ReadAllLines(configFilePath)
                         .Where(line => !line.TrimStart().StartsWith("#") && line.Contains("export PATH="))
                         .ToList();
 
         if (lines.Any())
         {
-            Console.WriteLine("Paths in .zshrc:");
+            Console.WriteLine($"Paths in {shellConfigFile}:");
             foreach (var line in lines)
             {
                 Console.WriteLine(line.Replace("export PATH=\"$PATH:", "").Replace("\"", ""));
@@ -132,20 +144,21 @@ class Program
         }
         else
         {
-            Console.WriteLine("No paths found in .zshrc.");
+            Console.WriteLine($"No paths found in {shellConfigFile}.");
         }
     }
 
-    static void OpenZshrcInVSCode()
+    static void OpenShellConfigInVSCode()
     {
-        var zshrcPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".zshrc");
+        var shellConfigFile = GetShellConfigFile();
+        var configFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), shellConfigFile);
 
         try
         {
             var processStartInfo = new ProcessStartInfo
             {
                 FileName = "code",
-                Arguments = zshrcPath,
+                Arguments = configFilePath,
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true
@@ -177,8 +190,7 @@ class Program
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred while trying to open .zshrc in Visual Studio Code: {ex.Message}");
+            Console.WriteLine($"An error occurred while trying to open {shellConfigFile} in Visual Studio Code: {ex.Message}");
         }
     }
 }
-
